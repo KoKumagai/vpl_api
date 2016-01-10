@@ -12,7 +12,7 @@ VPL API is a unofficial Vancouver Public Library Web API.
 |https://vplapi.herokuapp.com/v1/search.json|keyword :  *required<br>category : [keyword, title, author, series, subject, tag]<br>page|status<br>title<br>author<br>format<br>callNumber<br> availability|
 
 #### Example:
-    https://vplapi.herokuapp.com/v1/search.json?keyword=head first&category=keyword&page=1
+    https://vplapi.herokuapp.com/v1/search.json?keyword=head%20first&category=keyword&page=1
 
 #### Output:
 ```json

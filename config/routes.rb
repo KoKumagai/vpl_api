@@ -3,6 +3,10 @@ Rails.application.routes.draw do
     get 'search' => 'vancouver_public_library#search'
   end
 
+  namespace :v2 do
+    get 'search' => 'vancouver_public_library#search'
+  end
+
   root 'errors#routing_error'
   get '*anything', to: 'errors#routing_error'
   # The priority is based upon order of creation: first created -> highest priority.

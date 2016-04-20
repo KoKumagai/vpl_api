@@ -3,7 +3,7 @@ require 'nokogiri'
 require 'uri'
 
 class V1::SearchInfo
-  BASE_URL = 'https://vpl.bibliocommons.com/search?utf8=%E2%9C%93&commit=Search&searchOpt=catalogue&display_quantity=25'
+  BASE_URL = 'https://vpl.bibliocommons.com/search?utf8=%E2%9C%93&commit=Search&searchOpt=catalogue&display_quantity=25'.freeze
 
   def initialize(keyword, category=nil, page=nil)
     @keyword = keyword
@@ -36,7 +36,7 @@ class V1::SearchInfo
       content['author'] = node.xpath('.//span[contains(@class, "author")]/a/text()').to_s
       content['format'] = node.xpath('.//span[contains(@class, "format")]')[0].text.gsub(/(\s)/, '')
       content['callNumber'] = node.xpath('.//span[contains(@class, "callNumber")]').text.strip
-      content['availability'] = node.xpath('.//span[contains(@class, "item_available")]').text.strip
+      content['availability'] = extract_availability_from(node)
       contents['info'] << content
     end
     contents
@@ -65,5 +65,11 @@ class V1::SearchInfo
 
     def create_page
       "page=#{@page}"
+    end
+
+    def extract_availability_from(node)
+      availability = node.xpath('.//span[contains(@class, "item_available")]').text.strip
+      availability = node.xpath('.//span[contains(@class, "item_not_available")]').text.strip if availability.empty?
+      availability
     end
 end

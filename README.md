@@ -164,7 +164,7 @@ VPL API is a unofficial Vancouver Public Library Web API.
          "author":"Beighley, Lynn",
          "format":"Book",
          "callNumber":"ON ORDER",
-         "availability":""
+         "availability":"On order"
       },
       {
          "title":"First Nations Head Start Standards Guide",

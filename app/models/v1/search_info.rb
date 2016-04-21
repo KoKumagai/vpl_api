@@ -70,6 +70,7 @@ class V1::SearchInfo
     def extract_availability_from(node)
       availability = node.xpath('.//span[contains(@class, "item_available")]').text.strip
       availability = node.xpath('.//span[contains(@class, "item_not_available")]').text.strip if availability.empty?
+      availability = node.xpath('.//span[contains(@class, "item_on_order")]').text.strip if availability.empty?
       availability
     end
 end

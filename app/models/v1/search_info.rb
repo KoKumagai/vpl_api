@@ -34,6 +34,7 @@ class V1::SearchInfo
       content = {}
       content['title'] = node.xpath('.//span[contains(@class, "title")]/a/text()').to_s.gsub(/&amp;/, '&')
       content['author'] = node.xpath('.//span[contains(@class, "author")]/a/text()').to_s
+      content['rating'] = extract_rating_from(node)
       content['format'] = node.xpath('.//span[contains(@class, "format")]')[0].text.gsub(/(\s)/, '')
       content['callNumber'] = node.xpath('.//span[contains(@class, "callNumber")]').text.strip
       content['availability'] = extract_availability_from(node)
@@ -72,5 +73,12 @@ class V1::SearchInfo
       availability = node.xpath('.//span[contains(@class, "item_not_available")]').text.strip if availability.empty?
       availability = node.xpath('.//span[contains(@class, "item_on_order")]').text.strip if availability.empty?
       availability
+    end
+
+    def extract_rating_from(node)
+      return nil if node.xpath('.//div[contains(@class, "search_ratings")]/i[contains(@class, "icon-star")]').empty?
+      rating = node.xpath('.//div[contains(@class, "search_ratings")]/i[@class = "icon-star"]').count
+      rating += 0.5 if 0 != node.xpath('.//div[contains(@class, "search_ratings")]/i[@class = "icon-star-half-alt"]').count
+      rating
     end
 end

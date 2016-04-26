@@ -32,11 +32,11 @@ class V1::SearchInfo
 
     doc.xpath('/html/body//div[contains(@class, "list_item_outer")]').each do |node|
       content = {}
-      content['title'] = node.xpath('.//span[contains(@class, "title")]/a/text()').to_s.gsub(/&amp;/, '&')
-      content['author'] = node.xpath('.//span[contains(@class, "author")]/a/text()').to_s
+      content['title'] = extract_title_from(node)
+      content['author'] = extract_author_from(node)
       content['rating'] = extract_rating_from(node)
-      content['format'] = node.xpath('.//span[contains(@class, "format")]')[0].text.gsub(/(\s)/, '')
-      content['callNumber'] = node.xpath('.//span[contains(@class, "callNumber")]').text.strip
+      content['format'] = extract_format_from(node)
+      content['callNumber'] = extract_callNumber_from(node)
       content['availability'] = extract_availability_from(node)
       contents['info'] << content
     end
@@ -68,11 +68,12 @@ class V1::SearchInfo
       "page=#{@page}"
     end
 
-    def extract_availability_from(node)
-      availability = node.xpath('.//span[contains(@class, "item_available")]').text.strip
-      availability = node.xpath('.//span[contains(@class, "item_not_available")]').text.strip if availability.empty?
-      availability = node.xpath('.//span[contains(@class, "item_on_order")]').text.strip if availability.empty?
-      availability
+    def extract_title_from(node)
+      node.xpath('.//span[@class = "title"]/a/text()').to_s.gsub(/&amp;/, '&')
+    end
+
+    def extract_author_from(node)
+      node.xpath('.//span[@class = "author"]/a/text()').to_s
     end
 
     def extract_rating_from(node)
@@ -80,5 +81,20 @@ class V1::SearchInfo
       rating = node.xpath('.//div[contains(@class, "search_ratings")]/i[@class = "icon-star"]').count
       rating += 0.5 if 0 != node.xpath('.//div[contains(@class, "search_ratings")]/i[@class = "icon-star-half-alt"]').count
       rating
+    end
+
+    def extract_format_from(node)
+      node.xpath('.//span[@class = "format"]')[0].text.gsub(/(\s)/, '')
+    end
+
+    def extract_callNumber_from(node)
+      node.xpath('.//span[@class = "value callNumber"]').text.strip
+    end
+
+    def extract_availability_from(node)
+      availability = node.xpath('.//span[@class = "item_available"]').text.strip
+      availability = node.xpath('.//span[@class = "item_not_available"]').text.strip if availability.empty?
+      availability = node.xpath('.//span[@class = "item_on_order"]').text.strip if availability.empty?
+      availability
     end
 end
